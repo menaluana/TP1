@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/**Un programa de inventario de una tienda que almacena los productos en una estructura y los guarda en un archivo:
+
+Desarrolla un programa en C que permita gestionar el inventario de una tienda. Los productos
+pueden tener atributos como nombre, precio, cantidad disponible, etc. Utiliza una estructura
+para representar cada producto y guarda los productos en un archivo. El programa debe permitir
+agregar nuevos productos al inventario, buscar productos por nombre o código, actualizar la cantidad
+disponible y generar informes de inventario.*/
+
+///ESTRUCTURA
+typedef struct
+{
+    char nombreProducto[30];
+    int precio;
+    int stock;
+    double codigo;
+} producto;
+
+///PROTOTIPADO
+void cargarinventario ();
+void buscarPorNombre ();
+void buscarPorcodigo();
+
+int main()
+{
+    producto inventario[100];
+    cargarinventario ();
+    buscarPorNombre ();
+    buscarPorcodigo();
+}
+
+void cargarinventario ()                /**Realiza la carga de productos a un archivo,los cuales se van agregando al final, ya que el archivo esta abierto en el modo "a.b"*/
+{
+    producto inventarioNuevo;
+    char continuar = 's';
+    int i=0;
+    FILE *archivo;
+    archivo = fopen("archivo.bin", "ab");
+    if(archivo != NULL)
+    {
+
+        while(!feof(archivo) && continuar == 's')
+        {
+            printf("Ingrese el nombre del producto: \n");
+            fflush(stdin);
+            gets(inventarioNuevo.nombreProducto);
+
+            printf("Ingrese el precio del producto: \n");
+            fflush(stdin);
+            scanf("%i", &inventarioNuevo.precio);
+
+            printf("Ingrese el stock de producto: \n");
+            fflush(stdin);
+            scanf("%i", &inventarioNuevo.stock);
+
+            printf("Ingrese el codigo de producto: \n");
+            fflush(stdin);
+            scanf("%d", &inventarioNuevo.codigo);
+
+            fwrite(&inventarioNuevo,sizeof(producto),1,archivo);
+
+            printf("Ingrese 's' para seguir ingresando productos: \n");
+            fflush(stdin);
+            scanf("%c",&continuar);
+        }
+
+    }
+    else
+    {
+        printf("EL ARCHIVO NO EXISTE!!");
+    }
+
+    fclose(archivo);
+}
+
+
+void buscarPorNombre ()
+{
+    producto inventarioNuevo;
+    char inventarioAbuscar[30];
+    printf("Ingrese el nombre del producto que desea buscar:\n");
+    fflush (stdin);
+    gets(inventarioAbuscar);
+    FILE *archivo;
+    archivo = fopen("archivo.bin", "rb");
+    if(archivo != NULL)
+    {
+        while (!feof(archivo))
+        {
+            fread(&inventarioNuevo, sizeof(producto),1,archivo);
+
+            if (strcmp(inventarioAbuscar,inventarioNuevo.nombreProducto)==0)
+            {
+                puts ("------------------------------------------------------");
+                printf("PRODUCTO: %s\n", inventarioNuevo.nombreProducto);
+                printf("PRECIO: %i\n", inventarioNuevo.precio);
+                printf("STOCK: %i\n", inventarioNuevo.stock);
+                printf("CODIGO: %d\n", inventarioNuevo.codigo);
+                puts ("------------------------------------------------------");
+            }
+        }
+
+
+    }
+    else {
+        printf("EL ARCHIVO NO EXISTE!!");
+    }
+    fclose(archivo);
+}
+
+void buscarPorcodigo()
+{
+    producto inventarioNuevo;
+    double codigo;
+    printf("Ingrese el codigo del producto que desea buscar:\n");
+    fflush (stdin);
+    scanf("%d",&codigo);
+    FILE *archivo;
+    archivo = fopen("archivo.bin", "rb");
+    if(archivo != NULL)
+    {
+        while (!feof(archivo))
+        {
+            fread(&inventarioNuevo, sizeof(producto),1,archivo);
+            if(codigo == inventarioNuevo.codigo)
+            {
+                puts ("------------------------------------------------------");
+                printf("PRODUCTO: %s\n", inventarioNuevo.nombreProducto);
+                printf("PRECIO: %i\n", inventarioNuevo.precio);
+                printf("STOCK: %i\n", inventarioNuevo.stock);
+                printf("CODIGO: %d\n", inventarioNuevo.codigo);
+                puts ("------------------------------------------------------");
+
+            }
+        }
+
+    } else
+    {
+        printf("EL ARCHIVO NO EXISTE!\n");
+    }
+    fclose(archivo);
+}
