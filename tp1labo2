@@ -22,14 +22,19 @@ typedef struct
 ///PROTOTIPADO
 void cargarinventario ();
 void buscarPorNombre ();
-void buscarPorcodigo();
+void buscarPorcodigo(double codigo);
 
 int main()
 {
     producto inventario[100];
     cargarinventario ();
     buscarPorNombre ();
-    buscarPorcodigo();
+    double codigo;
+    printf("Ingrese el codigo del producto que desea buscar:\n");
+    fflush (stdin);
+    scanf("%d",&codigo);
+    buscarPorcodigo(codigo);
+
 }
 
 void cargarinventario ()                /**Realiza la carga de productos a un archivo,los cuales se van agregando al final, ya que el archivo esta abierto en el modo "a.b"*/
@@ -111,13 +116,9 @@ void buscarPorNombre ()
     fclose(archivo);
 }
 
-void buscarPorcodigo()
+void buscarPorcodigo(double codigo)
 {
     producto inventarioNuevo;
-    double codigo;
-    printf("Ingrese el codigo del producto que desea buscar:\n");
-    fflush (stdin);
-    scanf("%d",&codigo);
     FILE *archivo;
     archivo = fopen("archivo.bin", "rb");
     if(archivo != NULL)
@@ -125,7 +126,7 @@ void buscarPorcodigo()
         while (!feof(archivo))
         {
             fread(&inventarioNuevo, sizeof(producto),1,archivo);
-            if(codigo == inventarioNuevo.codigo)
+            if(codigo = inventarioNuevo.codigo)
             {
                 puts ("------------------------------------------------------");
                 printf("PRODUCTO: %s\n", inventarioNuevo.nombreProducto);
@@ -143,3 +144,36 @@ void buscarPorcodigo()
     }
     fclose(archivo);
 }
+
+/*void modificarRegistro()
+{
+    int registro;
+    int nuevoStock;
+    producto productoNuevo;
+    printf("Ingrese la posicion del registro que desea modificar:\n");
+    fflush(stdin);
+    scanf("%i",&registro);
+    printf("Ingrese el nuevo numero de stock:\n");
+    fflush(stdin);
+    scanf("%i",nuevoStock);
+    int i=0;
+    FILE *archivo;
+    archivo = fopen("archivo.bin", "r+b");
+    if(archivo!= NULL)
+    {
+        while(!feof(archivo))
+        {
+
+            fseek(archivo,sizeof(producto)* (registro-1),0);
+            fread(&productoNuevo,sizeof(producto),1,archivo);
+            fwrite(&productoNuevo,sizeof(producto),1,archivo);
+        }
+    }
+
+    else
+    {
+        printf("EL ARCHIVO NO EXISTE!\n");
+    }
+    fclose(archivo);
+
+}*/
